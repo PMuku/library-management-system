@@ -13,7 +13,7 @@ A simple and lightweight Express server.
 
 ```bash
 # Clone the repository
-git clone https://github.com/OpexRah/library-management-system.git
+git clone https://github.com/PMuku/library-management-system.git
 cd library-management-system/server
 
 # Install dependencies
