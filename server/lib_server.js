@@ -31,4 +31,7 @@ app.use('/api/librarian', librarian);
 app.use(notFound);
 app.use(errorHandler);
 
+app.get('/', (req, res) => {
+    res.send('Server is up and running...');
+});
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}.`));
