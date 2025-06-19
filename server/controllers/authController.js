@@ -83,7 +83,7 @@ const userRegister = async (req, res, next) => {
 };
 
 // @desc    Admin can create librarians
-// @route   POST /api/users/makelib
+// @route   POST /api/admin/makelib
 const makeLibrarian = async (req, res, next) => {
     try {
         const {username, password} = req.body;

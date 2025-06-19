@@ -20,6 +20,14 @@ app.use(express.urlencoded({ extended: false }));
 // Logger middleware
 app.use(logger);
 
+// CORS middleware
+import cors from 'cors';
+app.use(cors({
+    origin: 'http://localhost:5173', // Adjust this to your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true, // Allow credentials if needed
+}));
+
 // Routes
 app.use('/api/books', books);
 app.use('/api/admin', admin);
@@ -30,6 +38,7 @@ app.use('/api/librarian', librarian);
 // Error handler
 app.use(notFound);
 app.use(errorHandler);
+
 
 app.get('/', (req, res) => {
     res.send('Server is up and running...');

@@ -100,7 +100,7 @@ const rejectRequest = async (req, res, next) => {
 };
 
 // @desc    Mark book as returned
-// @route   PUT /api/librarian/return-book/:id
+// @route   PUT /api/librarian/mark-returned/:id
 const markReturned = async (req, res, next) => {
     try {
         const { id } = req.params;

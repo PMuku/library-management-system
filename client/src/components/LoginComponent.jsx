@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-function LoginComponent() {
+function LoginComponent({ setIsLoggedIn, setRole }) {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -14,7 +14,7 @@ function LoginComponent() {
         setError('');
         setMessage('');
         try {
-            const response = await fetch(`${BACKEND_URL}/auth/login`, {
+            const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
@@ -27,9 +27,11 @@ function LoginComponent() {
             }
         
             const data = await response.json();
-            if (data.access_token && data.refresh_token) {
+            if (data.access_token && data.refresh_token && data.role) {
                 localStorage.setItem('access_token', data.access_token);
                 localStorage.setItem('refresh_token', data.refresh_token);
+                setRole(data.role || 'user');
+                setIsLoggedIn(true);
                 console.log('Login successful:', data);
             } else {
                 setError('Login failed. No tokens received');
@@ -44,7 +46,7 @@ function LoginComponent() {
         setError('');
         setMessage('');
         try {
-            const response = await fetch(`${BACKEND_URL}/auth/register`, {
+            const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
