@@ -1,8 +1,25 @@
-import React from 'react';
+import { useState } from 'react';
+import UserHome from './user-tasks/UserHome';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function UserDashboard({ setIsLoggedIn }) {
+
+    const [activeTab, setActiveTab] = useState('');
+
+    const renderActiveTab = () => {
+        switch (activeTab) {
+            case 'home':
+                return <UserHome />;
+            default:
+                return (
+                <>
+                    <h1 className="text-3xl font-semibold mb-4">Welcome, User!</h1>
+                    <p>Select an action from the sidebar to continue.</p>
+                </>
+                );
+        }
+    };
 
     const handleLogout = async () => {
         try {
@@ -20,8 +37,8 @@ function UserDashboard({ setIsLoggedIn }) {
             }
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
-            localStorage.removeItem('role');
             setIsLoggedIn(false);
+            setRole('');
             console.log('Logout successful');
         } catch (error) {
             console.error('Logout error:', error);
@@ -29,9 +46,10 @@ function UserDashboard({ setIsLoggedIn }) {
     };
 
     const menuItems = [
-        { label: 'Currently Issued Books', icon: 'book' },
-        { label: 'Previously Issued Books', icon: 'history' },
-        { label: 'Pay Fines', icon: 'payment' }
+        { label: 'Home', icon: 'home', tab: 'home' },
+        { label: 'Currently Issued Books', icon: 'book', tab: 'issued' },
+        { label: 'Previously Issued Books', icon: 'history', tab: 'history' },
+        { label: 'Pay Fines', icon: 'payment', tab: 'fines' },
     ];
 
     return (
@@ -42,6 +60,7 @@ function UserDashboard({ setIsLoggedIn }) {
                     {menuItems.map((item, index) => (
                         <button
                             key={index}
+                            onClick={() => setActiveTab(item.tab)}
                             className="flex items-center gap-2 p-2 text-sm hover:bg-blue-700 rounded transition w-full text-left"
                         >
                             <span className="material-icons">{item.icon}</span>
@@ -60,8 +79,7 @@ function UserDashboard({ setIsLoggedIn }) {
 
             {/* Main Content */}
             <div className="flex-1 p-8">
-                <h1 className="text-3xl font-semibold mb-4">Welcome, User!</h1>
-                <p>Select an action from the sidebar to continue.</p>
+                {renderActiveTab()}
             </div>
         </div>
     );

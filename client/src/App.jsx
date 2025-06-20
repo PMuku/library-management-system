@@ -7,24 +7,24 @@ import AdminDashboard from "./components/AdminDashboard";
 
 export default function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [role, setRole] = useState('');
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
-    let userRole = '';
-    if (accessToken) {
-      try {
-        const payload = JSON.parse(atob(accessToken.split('.')[1]));
-        userRole = payload.role;
-      } catch (e) {
-        userRole = '';
-      }
-    }
-    
-    setIsLoggedIn(!!accessToken);
-    setRole(userRole || ''); 
-  }, []);
+    useEffect(() => {
+        const accessToken = localStorage.getItem("access_token");
+        let userRole = '';
+        if (accessToken) {
+        try {
+            const payload = JSON.parse(atob(accessToken.split('.')[1]));
+            userRole = payload.role;
+        } catch (e) {
+            userRole = '';
+        }
+        }
+        
+        setIsLoggedIn(!!accessToken);
+        setRole(userRole || ''); 
+    }, []);
 
   const dashboards = {
     'admin': <AdminDashboard setIsLoggedIn={setIsLoggedIn} />,
