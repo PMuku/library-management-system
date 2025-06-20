@@ -10,10 +10,20 @@ const issueBook = async (req, res, next) => {
             error.status = 400;
             return next(error);
         }
+        const alreadyRequested = await IssueRequest.findOne({
+            user: req.user.id,
+            bookId,
+            status: { $in: ['pending', 'approved'] }
+        });
+        if (alreadyRequested) {
+            const error = new Error('You already have a pending or approved request for this book.');
+            error.status = 400;
+            return next(error);
+        }
         const pendingFines = await IssueRequest.findOne({
-            userId: req.user._id,
+            user: req.user._id,
             finePaid: false,
-            status: { $in: ['returned', 'approved'] }
+            status: 'returned'
         });
         if (pendingFines) {
             const error = new Error('You have pending fines. Please pay them before issuing a new book.');
@@ -21,7 +31,7 @@ const issueBook = async (req, res, next) => {
             return next(error);
         }
         const newRequest = await IssueRequest.create({
-            userId: req.user._id,
+            user: req.user._id,
             bookId: bookId,
             duration, // default to 14 days if not specified
             status: 'pending'
@@ -40,7 +50,7 @@ const getCurrentIssues = async (req, res, next) => {
         const current = await IssueRequest.find({ 
             userId: req.user._id,
             status: 'approved'
-        }).populate('bookcpyId')
+        }).populate('bookcpyId').populate('bookId', 'title author');
         res.status(200).json(current);
     } catch (error) {
         next(error);
@@ -54,7 +64,7 @@ const getPastIssues = async (req, res, next) => {
         const past = await IssueRequest.find({ 
             userId: req.user._id,
             status: { $in: ['returned', 'rejected'] }
-        }).populate('bookcpyId');
+        }).populate('bookcpyId').populate('bookId', 'title author');
         res.status(200).json(past);
     } catch (error) {
         next(error);
