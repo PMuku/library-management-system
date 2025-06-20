@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import LibHome from './lib-tasks/LibHome';
+import PendingRequests from './lib-tasks/PendingRequests';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-function LibrarianDashboard({ setIsLoggedIn }) {
+function LibrarianDashboard({ setIsLoggedIn, setRole }) {
 
     const [activeTab, setActiveTab] = useState('');
 
@@ -11,6 +12,8 @@ function LibrarianDashboard({ setIsLoggedIn }) {
         switch (activeTab) {
             case 'home':
                 return <LibHome />;
+            case 'requests':
+                return <PendingRequests />;
             default:
                 return (
                 <>

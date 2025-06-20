@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import UserHome from './user-tasks/UserHome';
+import CurrentIssues from './user-tasks/CurrentIssues';
+import PastRequests from './user-tasks/PastRequests';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-function UserDashboard({ setIsLoggedIn }) {
+function UserDashboard({ setIsLoggedIn, setRole }) {
 
     const [activeTab, setActiveTab] = useState('');
 
@@ -11,6 +13,10 @@ function UserDashboard({ setIsLoggedIn }) {
         switch (activeTab) {
             case 'home':
                 return <UserHome />;
+            case 'issued':
+                return <CurrentIssues />;
+            case 'history':
+                return <PastRequests />;
             default:
                 return (
                 <>
@@ -48,7 +54,7 @@ function UserDashboard({ setIsLoggedIn }) {
     const menuItems = [
         { label: 'Home', icon: 'home', tab: 'home' },
         { label: 'Currently Issued Books', icon: 'book', tab: 'issued' },
-        { label: 'Previously Issued Books', icon: 'history', tab: 'history' },
+        { label: 'Previous Issue Requests', icon: 'history', tab: 'history' },
         { label: 'Pay Fines', icon: 'payment', tab: 'fines' },
     ];
 

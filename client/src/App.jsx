@@ -28,8 +28,8 @@ export default function App() {
 
   const dashboards = {
     'admin': <AdminDashboard setIsLoggedIn={setIsLoggedIn} />,
-    'librarian': <LibrarianDashboard setIsLoggedIn={setIsLoggedIn} />,
-    'user': <UserDashboard setIsLoggedIn={setIsLoggedIn} />
+    'librarian': <LibrarianDashboard setIsLoggedIn={setIsLoggedIn} setRole={setRole} />,
+    'user': <UserDashboard setIsLoggedIn={setIsLoggedIn} setRole={setRole}/>
   };
 
   return (
