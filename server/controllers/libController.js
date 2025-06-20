@@ -59,6 +59,8 @@ const approveRequest = async (req, res, next) => {
         // Reserve the copy
         availableCopy.isIssued = true;
         await availableCopy.save();
+        book.availableCopies -= 1;
+        await book.save();
         // Assign to request
         request.bookcpyId = availableCopy._id;
         request.status = 'approved';
@@ -119,6 +121,11 @@ const markReturned = async (req, res, next) => {
         if (copy) {
             copy.isIssued = false;
             await copy.save();
+            const book = await Book.findById(request.bookId);
+            if (book) {
+                book.availableCopies += 1;
+                await book.save();
+            }
         }
         request.actualReturnDate = new Date();
         request.status = 'returned';

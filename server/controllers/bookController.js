@@ -65,6 +65,8 @@ const addBookCopy = async (req, res, next) => {
         // Add a new copy of the book in BookCopy schema
         const newCopy = new BookCopy({ book: bookId });
         await newCopy.save();
+        book.availableCopies += 1; // Increment available copies
+        await book.save();
         res.status(201).json({ message: 'Book copy added successfully' });
     } catch (error) {
         next(error);

@@ -7,6 +7,9 @@ const BookSchema = new mongoose.Schema({
     author: {
         type: String, required: true
     },
+    availableCopies: {
+        type: Number, default: 0, required: false
+    },
     deleted: {
         type: Boolean, default: false
     }
