@@ -6,7 +6,7 @@ import BookCopy from '../models/bookCopySchema.js';
 // @route   GET /api/librarian/pending-requests
 const viewPendingRequests = async (req, res, next) => {
     try {
-        const requests = await IssueRequest.find({status: 'pending' }).populate('bookId user');
+        const requests = await IssueRequest.find({status: 'pending' }).populate('bookId').populate('user', 'username _id');
         res.status(200).json(requests);
     } catch (error) {
         next(error);
