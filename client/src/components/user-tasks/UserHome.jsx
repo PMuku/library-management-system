@@ -29,6 +29,12 @@ function UserHome() {
     useEffect(() => { fetchBooks(); }, []);
 
     const handleIssue = async (bookId) => {
+        const duration = prompt("Enter duration in days:");
+        if (!duration || isNaN(duration) || duration <= 0) {
+            alert("Please enter a valid duration.");
+            return;
+        }
+
         try {
             const res = await fetch(`${BACKEND_URL}/api/users/issue`, {
                 method: 'POST',
@@ -36,7 +42,7 @@ function UserHome() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                 },
-                body: JSON.stringify({ bookId }),
+                body: JSON.stringify({ bookId, duration: Number(duration) }),
             });
 
             if (!res.ok) {
