@@ -5,13 +5,14 @@ import IssueRequest from "../models/issueReqSchema.js";
 const issueBook = async (req, res, next) => {
     try {
         const { bookId, duration } = req.body;
+        const userId = req.user.id;
         if (!bookId) {
             const error = new Error('Book ID required');
             error.status = 400;
             return next(error);
         }
         const alreadyRequested = await IssueRequest.findOne({
-            user: req.user.id,
+            user: userId,
             bookId,
             status: { $in: ['pending', 'approved'] }
         });
@@ -21,7 +22,7 @@ const issueBook = async (req, res, next) => {
             return next(error);
         }
         const pendingFines = await IssueRequest.findOne({
-            user: req.user._id,
+            user: userId,
             finePaid: false,
             status: 'returned'
         });
@@ -31,7 +32,7 @@ const issueBook = async (req, res, next) => {
             return next(error);
         }
         const newRequest = await IssueRequest.create({
-            user: req.user._id,
+            user: userId,
             bookId: bookId,
             duration, // default to 14 days if not specified
             status: 'pending'
@@ -83,7 +84,7 @@ const payFine = async (req, res, next) => {
         }
         const request = await IssueRequest.findOne({
             _id: requestId,
-            userId: req.user._id
+            userId: req.user.id
         });
         if (!request) {
             const error = new Error('Invalid request ID');

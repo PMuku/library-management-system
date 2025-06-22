@@ -121,7 +121,7 @@ const markReturned = async (req, res, next) => {
             return next(error);
         }
         const copy = await BookCopy.findById(request.bookcpyId);
-        if (copy) {
+        if (copy && copy.isIssued) {
             copy.isIssued = false;
             await copy.save();
             const book = await Book.findById(request.bookId);
@@ -130,12 +130,14 @@ const markReturned = async (req, res, next) => {
                 await book.save();
             }
         }
-        request.actualReturnDate = new Date();
+        const now = new Date();
+        request.actualReturnDate = now;
         request.status = 'returned';
 
-        const dueDate = new Date(request.issueDate.getTime() + request.duration * 24 * 60 * 60 * 1000);
-        if (request.actualReturnDate > dueDate) {
-            const numDaysLate = Math.ceil((request.actualReturnDate - dueDate) / (1000 * 60 * 60 * 24));
+        const dueDate = new Date(request.issueDate);
+        dueDate.setDate(dueDate.getDate() + request.duration);
+        if (now > dueDate) {
+            const numDaysLate = Math.ceil((now - dueDate) / (1000 * 60 * 60 * 24));
             request.finePaid = false;
             request.fineAmount = numDaysLate * request.finePerDay;
         } else {
@@ -151,12 +153,12 @@ const markReturned = async (req, res, next) => {
 
 // @desc    View all currently issued books
 // @route   GET /api/librarian/current-issues
-
 const getIssuedBooks = async (req, res, next) => {
     try {
-        const issuedBooks = await IssueRequest.find({
-            status: 'approved'
-        }).populate('book user');
+        const issuedBooks = await IssueRequest.find({ status: 'approved' })
+        .populate('bookId', 'title author')
+        .populate('user', 'username _id');
+
         res.status(200).json(issuedBooks);
     } catch (error) {
         next(error);

@@ -4,7 +4,7 @@ const IssueReqSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: false
+        required: true
     },
     bookId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -48,7 +48,7 @@ const IssueReqSchema = new mongoose.Schema({
     },
     finePaid: {
         type: Boolean,
-        default: false
+        default: true
     }
 });
 
