@@ -51,7 +51,6 @@ function LibrarianDashboard({ setIsLoggedIn, setRole }) {
     const menuItems = [
         { label: 'Home', icon: 'home', tab: 'home' },
         { label: 'View Pending Requests', icon: 'pending_actions', tab: 'requests' },
-        { label: 'Mark Books as Returned', icon: 'assignment_returned', tab: 'returns' },
         { label: 'Currently Issued Books', icon: 'book', tab: 'issued' },
         { label: 'Overdue Users', icon: 'people', tab: 'overdue' },
     ];
