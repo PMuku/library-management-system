@@ -14,31 +14,31 @@ export default function App() {
         const accessToken = localStorage.getItem("access_token");
         let userRole = '';
         if (accessToken) {
-        try {
-            const payload = JSON.parse(atob(accessToken.split('.')[1]));
-            userRole = payload.role;
-        } catch (e) {
-            userRole = '';
-        }
+            try {
+                const payload = JSON.parse(atob(accessToken.split('.')[1]));
+                userRole = payload.role;
+            } catch (e) {
+                userRole = '';
+            }
         }
         
         setIsLoggedIn(!!accessToken);
         setRole(userRole || ''); 
     }, []);
 
-  const dashboards = {
-    'admin': <AdminDashboard setIsLoggedIn={setIsLoggedIn} />,
-    'librarian': <LibrarianDashboard setIsLoggedIn={setIsLoggedIn} setRole={setRole} />,
-    'user': <UserDashboard setIsLoggedIn={setIsLoggedIn} setRole={setRole}/>
-  };
+    const dashboards = {
+        'admin': <AdminDashboard setIsLoggedIn={setIsLoggedIn} />,
+        'librarian': <LibrarianDashboard setIsLoggedIn={setIsLoggedIn} setRole={setRole} />,
+        'user': <UserDashboard setIsLoggedIn={setIsLoggedIn} setRole={setRole}/>
+    };
 
-  return (
-    <>
-      {isLoggedIn ? (
-        dashboards[role]
-      ) : (
-        <LoginComponent setIsLoggedIn={setIsLoggedIn} setRole={setRole} />
-      )}
-    </>
-  );
+    return (
+        <>
+            {isLoggedIn ? (
+            dashboards[role]
+            ) : (
+            <LoginComponent setIsLoggedIn={setIsLoggedIn} setRole={setRole} />
+            )}
+        </>
+    );
 }

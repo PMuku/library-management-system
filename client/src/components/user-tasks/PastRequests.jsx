@@ -1,5 +1,6 @@
 // PastRequests.jsx
 import { useEffect, useState } from 'react';
+import { getStatusStyle } from '../statusStyles';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -35,12 +36,11 @@ function PastRequests() {
                     <div key={req._id} className="p-4 border rounded shadow">
                         <p><strong>Title:</strong> {req.bookId?.title}</p>
                         <p><strong>Author:</strong> {req.bookId?.author}</p>
-                        <p><strong>Requested On:</strong> {new Date(req.requestDate).toLocaleDateString()}</p>
-                        <p><strong>Status:</strong> {req.status}</p>
+                        <p><strong>Requested On:</strong> {new Date(req.issueDate).toLocaleDateString()}</p>
+                        <p><strong>Status:</strong> <span className={getStatusStyle(req.status)}>{req.status}</span></p>
                         {req.status === 'rejected' && <p><strong>Reason:</strong> {req.rejectionReason}</p>}
                         {req.status === 'returned' && (
                             <>
-                                <p><strong>Issued:</strong> {new Date(req.issueDate).toLocaleDateString()}</p>
                                 <p><strong>Returned:</strong> {new Date(req.actualReturnDate).toLocaleDateString()}</p>
                                 <p><strong>Fine:</strong> {req.fineAmount} ({req.finePaid ? 'Paid' : 'Unpaid'})</p>
                             </>

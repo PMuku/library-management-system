@@ -33,9 +33,9 @@ function CurrentIssues() {
             <div className="space-y-4">
                 {books.map((req) => (
                     <div key={req._id} className="p-4 border rounded shadow">
-                        <p>Title: {req.book?.title}</p>
-                        <p>Author: {req.book?.author}</p>
-                        <p>Issued On:{new Date(req.issueDate).toLocaleDateString()}</p>
+                        <p><strong>Title:</strong> {req.bookId.title}</p>
+                        <p><strong>Author:</strong> {req.bookId.author}</p>
+                        <p><strong>Issued On:</strong> {new Date(req.issueDate).toLocaleDateString()}</p>
                     </div>
                 ))}
             </div>

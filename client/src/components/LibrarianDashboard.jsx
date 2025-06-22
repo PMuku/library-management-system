@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import LibHome from './lib-tasks/LibHome';
 import PendingRequests from './lib-tasks/PendingRequests';
+import LibrarianCurrentIssues from './lib-tasks/currentlyIssued';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -14,6 +15,8 @@ function LibrarianDashboard({ setIsLoggedIn, setRole }) {
                 return <LibHome />;
             case 'requests':
                 return <PendingRequests />;
+            case 'issued':
+                return <LibrarianCurrentIssues />;
             default:
                 return (
                 <>
