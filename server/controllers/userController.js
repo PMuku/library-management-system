@@ -49,7 +49,7 @@ const issueBook = async (req, res, next) => {
 const getCurrentIssues = async (req, res, next) => {
     try {
         const current = await IssueRequest.find({ 
-            userId: req.user._id,
+            user: req.user.id,
             status: 'approved'
         }).populate('bookcpyId').populate('bookId', 'title author');
         res.status(200).json(current);
@@ -63,7 +63,7 @@ const getCurrentIssues = async (req, res, next) => {
 const getPastIssues = async (req, res, next) => {
     try {
         const past = await IssueRequest.find({ 
-            userId: req.user._id,
+            user: req.user.id,
             status: { $in: ['returned', 'rejected'] }
         }).populate('bookcpyId').populate('bookId', 'title author');
         res.status(200).json(past);
