@@ -1,6 +1,6 @@
 // PastRequests.jsx
 import { useEffect, useState } from 'react';
-import { getStatusStyle } from '../statusStyles';
+import { getStatusStyle } from '../../utils/statusStyles';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 

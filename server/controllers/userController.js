@@ -1,4 +1,5 @@
 import IssueRequest from "../models/issueReqSchema.js";
+import calculateAndUpdateFine from "../utils/calculateFine.js";
 
 // @desc    Create a new book issue request
 // @route   POST /api/users/issue
@@ -48,10 +49,13 @@ const issueBook = async (req, res, next) => {
 // current issues (approved and not returned)
 const getCurrentIssues = async (req, res, next) => {
     try {
-        const current = await IssueRequest.find({ 
+        const current = await IssueRequest.find({
             user: req.user.id,
             status: 'approved'
         }).populate('bookcpyId').populate('bookId', 'title author');
+        for (const req_ of current) {
+            await calculateAndUpdateFine(req_);
+        }
         res.status(200).json(current);
     } catch (error) {
         next(error);
@@ -75,6 +79,7 @@ const getPastIssues = async (req, res, next) => {
 // @desc    Pay fines
 // @route   POST /api/users/pay-fine
 const payFine = async (req, res, next) => {
+    console.log('Reached payFine route');
     try {
         const { requestId } = req.body;
         if (!requestId) {
@@ -82,9 +87,11 @@ const payFine = async (req, res, next) => {
             error.status = 400;
             return next(error);
         }
+        
         const request = await IssueRequest.findOne({
             _id: requestId,
-            userId: req.user.id
+            user: req.user.id,
+            status: 'approved',
         });
         if (!request) {
             const error = new Error('Invalid request ID');

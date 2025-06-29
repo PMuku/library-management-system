@@ -7,10 +7,21 @@ const calculateAndUpdateFine = async (issueRequest) => {
 
   if (now > dueDate) {
     const daysLate = Math.ceil((now - dueDate) / (1000 * 60 * 60 * 24));
-    const fine = daysLate * issueRequest.finePerDay;
-    issueRequest.fineAmount = fine;
-    issueRequest.finePaid = false;
-    await issueRequest.save();
+    const newFine = daysLate * issueRequest.finePerDay;
+    if (!issueRequest.finePaid) {
+        issueRequest.fineAmount = newFine;
+        issueRequest.finePaid = false;
+        await issueRequest.save();
+    } else if (issueRequest.fineAmount !== newFine) {
+        request.fineAmount = newFine;
+        await request.save();
+    }
+  } else {
+    if (issueRequest.fineAmount !== 0 && !issueRequest.finePaid) {
+      issueRequest.fineAmount = 0;
+      issueRequest.finePaid = true; 
+      await issueRequest.save();
+    }
   }
 
   return issueRequest;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import UserHome from './user-tasks/UserHome';
 import CurrentIssues from './user-tasks/CurrentIssues';
 import PastRequests from './user-tasks/PastRequests';
+import PayFines from './user-tasks/payFines';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -17,6 +18,8 @@ function UserDashboard({ setIsLoggedIn, setRole }) {
                 return <CurrentIssues />;
             case 'history':
                 return <PastRequests />;
+            case 'fines':
+                return <PayFines />;
             default:
                 return (
                 <>
