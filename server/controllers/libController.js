@@ -1,6 +1,7 @@
 import IssueRequest from '../models/issueReqSchema.js';
 import Book from '../models/bookSchema.js';
 import BookCopy from '../models/bookCopySchema.js';
+import calculateAndUpdateFine from '../utils/calculateFine.js';
 
 // @desc    View all pending issue requests
 // @route   GET /api/librarian/pending-requests
@@ -134,15 +135,9 @@ const markReturned = async (req, res, next) => {
         request.actualReturnDate = now;
         request.status = 'returned';
 
-        const dueDate = new Date(request.issueDate);
-        dueDate.setDate(dueDate.getDate() + request.duration);
-        if (now > dueDate) {
-            const numDaysLate = Math.ceil((now - dueDate) / (1000 * 60 * 60 * 24));
-            request.finePaid = false;
-            request.fineAmount = numDaysLate * request.finePerDay;
-        } else {
-            request.finePaid = true;
+        if (request.fineAmount === undefined || request.fineAmount === null) {
             request.fineAmount = 0;
+            request.finePaid = true;
         }
         await request.save();
         res.status(200).json({ message: 'Book marked as returned', request });
@@ -175,15 +170,21 @@ const getOverdueUsers = async (req, res, next) => {
     const overdueRequests = await IssueRequest.find({
       status: 'approved',
       issueDate: { $exists: true },
-      $expr: {
-        $lt: [
-          { $add: ['$issueDate', { $multiply: ['$duration', 24 * 60 * 60 * 1000] }] },
-          now
-        ]
-      }
-    }).populate('user book');
+      duration: { $exists: true, $gt: 0 }
+    }).populate('user', 'username _id').populate('bookId', 'title author');
 
-    res.status(200).json(overdueRequests);
+    const overdue = [];
+
+    for (const req_ of overdueRequests) {
+      const dueDate = new Date(req_.issueDate.getTime() + req_.duration * 24 * 60 * 60 * 1000);
+
+      if (dueDate < now) {
+        await calculateAndUpdateFine(req_);
+        overdue.push(req_);
+      }
+    }
+
+    res.status(200).json(overdue);
   } catch (error) {
     next(error);
   }
