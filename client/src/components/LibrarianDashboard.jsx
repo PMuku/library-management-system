@@ -55,7 +55,6 @@ function LibrarianDashboard({ setIsLoggedIn, setRole }) {
         { label: 'Home', icon: 'home', tab: 'home' },
         { label: 'View Pending Requests', icon: 'pending_actions', tab: 'requests' },
         { label: 'Currently Issued Books', icon: 'book', tab: 'issued' },
-        { label: 'Overdue Users', icon: 'people', tab: 'overdue' },
     ];
 
     return (
