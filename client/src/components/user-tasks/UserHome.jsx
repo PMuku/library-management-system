@@ -26,7 +26,9 @@ function UserHome() {
         }
     };
 
-    useEffect(() => { fetchBooks(); }, []);
+    useEffect(() => {
+        fetchBooks();
+    }, []);
 
     const handleIssue = async (bookId) => {
         const duration = prompt("Enter duration in days:");
@@ -57,7 +59,7 @@ function UserHome() {
 
     const handleFilterSubmit = (e) => {
         e.preventDefault();
-        fetchBooks(); // re-fetch with query filters
+        fetchBooks();
     };
 
     return (
@@ -65,7 +67,6 @@ function UserHome() {
             <h2 className="text-2xl font-semibold mb-4">Available Books</h2>
             {error && <p className="text-red-600">{error}</p>}
 
-            {/* Search and Filter Form */}
             <form onSubmit={handleFilterSubmit} className="mb-6 flex flex-col md:flex-row gap-4">
                 <input
                     type="text"
@@ -89,22 +90,28 @@ function UserHome() {
                 </button>
             </form>
 
-            {/* Books List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {books.map((book) => (
                     <div
                         key={book._id}
                         className="relative group border border-gray-300 rounded-xl p-4 shadow hover:shadow-lg transition bg-white"
                     >
-                    <h3 className="text-lg font-semibold">{book.title}</h3>
-                    <p className="text-sm text-gray-600">{book.author}</p>
-                    <p className="text-sm mt-1">Available Copies: {book.availableCopies}</p>
-                    <button
-                        onClick={() => handleIssue(book._id)}
-                        className="hidden group-hover:block absolute bottom-4 right-4 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                    >
-                        Issue
-                    </button>
+                        {book.coverImage && (
+                            <img
+                                src={book.coverImage}
+                                alt={book.title}
+                                className="w-full h-48 object-contain mb-3 rounded"
+                            />
+                        )}
+                        <h3 className="text-lg font-semibold">{book.title}</h3>
+                        <p className="text-sm text-gray-600">{book.author}</p>
+                        <p className="text-sm mt-1">Available Copies: {book.availableCopies}</p>
+                        <button
+                            onClick={() => handleIssue(book._id)}
+                            className="hidden group-hover:block absolute bottom-4 right-4 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                        >
+                            Issue
+                        </button>
                     </div>
                 ))}
             </div>

@@ -30,7 +30,9 @@ function LibHome() {
         }
     };
 
-    useEffect(() => { fetchBooks(); }, []);
+    useEffect(() => {
+        fetchBooks();
+    }, []);
 
     const handleDelete = async (bookId) => {
         if (!confirm("Are you sure you want to delete this book?")) return;
@@ -74,10 +76,12 @@ function LibHome() {
                 },
                 body: JSON.stringify({ title: newTitle, author: newAuthor }),
             });
+
             if (!res.ok) {
                 const errData = await res.json();
                 throw new Error(errData.message || 'Failed to add book');
             }
+
             setNewTitle('');
             setNewAuthor('');
             setShowForm(false);
@@ -97,7 +101,6 @@ function LibHome() {
             <h2 className="text-2xl font-semibold mb-4">Manage Books</h2>
             {error && <p className="text-red-600">{error}</p>}
 
-            {/* Add New Book Button */}
             <div className="mb-4">
                 <button
                     onClick={() => setShowForm(!showForm)}
@@ -107,7 +110,6 @@ function LibHome() {
                 </button>
             </div>
 
-            {/* New Book Form */}
             {showForm && (
                 <form
                     onSubmit={handleAddBook}
@@ -138,7 +140,6 @@ function LibHome() {
                 </form>
             )}
 
-            {/* Filters */}
             <form onSubmit={handleFilterSubmit} className="mb-6 flex flex-col md:flex-row gap-4">
                 <input
                     type="text"
@@ -162,13 +163,19 @@ function LibHome() {
                 </button>
             </form>
 
-            {/* Book Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {books.map((book) => (
                     <div
                         key={book._id}
                         className="relative group border border-gray-300 rounded-xl p-4 shadow hover:shadow-lg transition bg-white"
                     >
+                        {book.coverImage && (
+                            <img
+                                src={book.coverImage}
+                                alt={book.title}
+                                className="w-full h-48 object-contain mb-3 rounded"
+                            />
+                        )}
                         <h3 className="text-lg font-semibold">{book.title}</h3>
                         <p className="text-sm text-gray-600">{book.author}</p>
                         <p className="text-sm mt-1">Available Copies: {book.availableCopies}</p>

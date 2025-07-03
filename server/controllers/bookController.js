@@ -30,6 +30,8 @@ const viewAllBooks = async (req, res, next) => {
 const addBook = async (req, res, next) => {
     try {
         const { title, author } = req.body;
+        let coverimage = null;
+
         if (!req.body || !title || !author) {
             const error = new Error('Title and author are required');
             error.status = 400;
@@ -42,8 +44,27 @@ const addBook = async (req, res, next) => {
             error.status = 409;
             return next(error);
         }
+        let coverImage = null;
+        try {
+            const response = await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`);
+            const data = await response.json();
+            const coverKey = data.docs?.[0]?.cover_edition_key;
+            if (coverKey) {
+                coverImage = `https://covers.openlibrary.org/b/olid/${coverKey}-L.jpg`;
+            }
+        } catch (err) {
+            console.warn('Error fetching cover image from Open Library:', err.message);
+        }
+        // If Open Library fails, check for uploaded file (via multer + Cloudinary)
+        if (!coverImage && req.file && req.file.path) {
+            coverImage = req.file.path;
+        }
+        // Fallback image if none found
+        if (!coverImage) {
+            coverImage = 'https://via.placeholder.com/200x300?text=No+Cover';
+        }
         // Create a new book
-        const newBook = await Book.create({ title, author });
+        const newBook = await Book.create({ title, author, coverImage });
         res.status(201).json(newBook);
     } catch (error) {
         next(error);
