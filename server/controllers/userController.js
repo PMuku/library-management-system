@@ -76,39 +76,62 @@ const getPastIssues = async (req, res, next) => {
     }
 };
 
-// @desc    Pay fines
-// @route   POST /api/users/pay-fine
-const payFine = async (req, res, next) => {
-    console.log('Reached payFine route');
+// @desc    Get all unpaid fines (from returned or approved requests)
+// @route   GET /api/users/fines
+const getOutstandingFines = async (req, res, next) => {
     try {
-        const { requestId } = req.body;
-        if (!requestId) {
-            const error = new Error('Request ID required');
-            error.status = 400;
-            return next(error);
-        }
-        
-        const request = await IssueRequest.findOne({
-            _id: requestId,
+        const requests = await IssueRequest.find({
             user: req.user.id,
-            status: 'approved',
-        });
-        if (!request) {
-            const error = new Error('Invalid request ID');
-            error.status = 404;
-            return next(error);
+            finePaid: false,
+            fineAmount: { $gt: 0 },
+            status: { $in: ['approved', 'returned'] },
+        }).populate('bookId', 'title author');
+
+        const totalBooks = requests.length;
+        let totalFine = 0;
+        for (const req_ of requests) {
+            await calculateAndUpdateFine(req_);
+            totalFine += req_.fineAmount;
         }
-        if (request.finePaid) {
-            const error = new Error('Fine already paid');
-            error.status = 400;
-            return next(error);
-        }
-        request.finePaid = true;
-        await request.save();
-        res.status(200).json({ message: 'Fine paid successfully' });
+
+        res.status(200).json({ totalFine, totalBooks });
     } catch (error) {
         next(error);
     }
 };
 
-export { issueBook, getCurrentIssues, getPastIssues, payFine };
+
+// @desc    Pay fines
+// @route   POST /api/users/pay-fine
+const payFine = async (req, res, next) => {
+    console.log('Reached payFine route');
+    try {
+        const userId = req.user.id;
+        // Get all unpaid fines (approved OR returned)
+        const unpaidFines = await IssueRequest.find({
+            user: userId,
+            finePaid: false,
+            fineAmount: { $gt: 0 },
+            status: { $in: ['approved', 'returned'] },
+        });
+
+        if (unpaidFines.length === 0) {
+            return res.status(200).json({ message: 'No pending fines to pay.' });
+        }
+
+        for (const request of unpaidFines) {
+            // Ensure latest fine value
+            await calculateAndUpdateFine(request);
+            request.finePaid = true;
+            await request.save();
+        }
+
+        res.status(200).json({
+            message: 'All fines paid successfully.'
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { issueBook, getCurrentIssues, getPastIssues, getOutstandingFines, payFine };

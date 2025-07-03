@@ -186,6 +186,7 @@ const getOverdueUsers = async (req, res, next) => {
 
     res.status(200).json(overdue);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

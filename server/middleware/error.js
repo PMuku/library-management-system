@@ -1,6 +1,6 @@
 const errorHandler = (err, req, res, next) => {
-    if (err.status) res.status(err.status).json({ msg: err.message });
-    else res.status(500).json({ msg: err.message });
+    const status = err.status || 500;
+    res.status(status).json({ message: err.message || 'Server Error' });
 };
 
 export default errorHandler;
