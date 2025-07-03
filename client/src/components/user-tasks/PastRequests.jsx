@@ -1,6 +1,6 @@
 // PastRequests.jsx
 import { useEffect, useState } from 'react';
-import { getStatusStyle } from '../../utils/statusStyles';
+import { getStatusStyle, getFineStyle } from '../../utils/Styles';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -42,7 +42,21 @@ function PastRequests() {
                         {req.status === 'returned' && (
                             <>
                                 <p><strong>Returned:</strong> {new Date(req.actualReturnDate).toLocaleDateString()}</p>
-                                <p><strong>Fine:</strong> {req.fineAmount} ({req.finePaid ? 'Paid' : 'Unpaid'})</p>
+                                <p>
+                                    <strong>Fine:</strong>{' '}
+                                    {req.fineAmount > 0 ? (
+                                        <>
+                                            {req.fineAmount}{' '}
+                                            <span className={`inline-block px-2 py-0.5 text-sm rounded-full font-medium ${getFineStyle(req.fineAmount, req.finePaid)}`}>
+                                                {req.finePaid ? 'Paid' : 'Unpaid'}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <span className="inline-block px-2 py-0.5 text-sm rounded-full bg-gray-200 text-gray-700 font-medium">
+                                            None
+                                        </span>
+                                    )}
+                                </p>
                             </>
                         )}
                     </div>

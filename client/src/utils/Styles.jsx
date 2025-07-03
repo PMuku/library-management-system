@@ -1,4 +1,4 @@
-// src/statusStyles.js
+// src/Styles.js
 
 export const getStatusStyle = (status) => {
     const base = "px-2 py-1 rounded-full text-xs font-semibold capitalize";
@@ -9,4 +9,9 @@ export const getStatusStyle = (status) => {
         returned: "bg-blue-100 text-blue-800",
     };
     return `${base} ${styles[status] || "bg-gray-100 text-gray-800"}`;
+};
+
+export const getFineStyle = (fineAmount, finePaid) => {
+    if (fineAmount === 0) return 'bg-gray-200 text-gray-700';
+    return finePaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
 };
