@@ -14,7 +14,10 @@ const BookSchema = new mongoose.Schema({
         type: Boolean, default: false
     },
     coverImage: {
-        type: String, default: 'https://via.placeholder.com/200x300?text=No+Cover'
+        type: String, default: 'https://via.placeholder.com/200x300?text=No+Cover', required: true
+    },
+    pdf: {
+        type: String, default: null, required: true
     }
 });
 

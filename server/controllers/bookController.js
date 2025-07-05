@@ -9,9 +9,6 @@ const viewAllBooks = async (req, res, next) => {
     try {
         const {search, author} = req.query;
         const query = {};
-
-        if (!req.user || !['admin', 'librarian'].includes(req.user.role))
-            query.deleted = { $ne: true };
         if (search)
             query.title = { $regex: search, $options: 'i' }; // case-insensitive search
         if (author)
@@ -28,47 +25,36 @@ const viewAllBooks = async (req, res, next) => {
 // @desc    Add a new book
 // @route   POST /api/books
 const addBook = async (req, res, next) => {
-    try {
-        const { title, author } = req.body;
-        let coverimage = null;
+  try {
+    const { title, author } = req.body;
+    const coverImageFile = req.files?.coverImage?.[0];
+    const pdfFile = req.files?.pdf?.[0];
 
-        if (!req.body || !title || !author) {
-            const error = new Error('Title and author are required');
-            error.status = 400;
-            return next(error);
-        }
-        // Check if the book already exists
-        const existingBook = await Book.findOne({ title, author });
-        if (existingBook) {
-            const error = new Error('Book already exists');
-            error.status = 409;
-            return next(error);
-        }
-        let coverImage = null;
-        try {
-            const response = await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`);
-            const data = await response.json();
-            const coverKey = data.docs?.[0]?.cover_edition_key;
-            if (coverKey) {
-                coverImage = `https://covers.openlibrary.org/b/olid/${coverKey}-L.jpg`;
-            }
-        } catch (err) {
-            console.warn('Error fetching cover image from Open Library:', err.message);
-        }
-        // If Open Library fails, check for uploaded file (via multer + Cloudinary)
-        if (!coverImage && req.file && req.file.path) {
-            coverImage = req.file.path;
-        }
-        // Fallback image if none found
-        if (!coverImage) {
-            coverImage = 'https://via.placeholder.com/200x300?text=No+Cover';
-        }
-        // Create a new book
-        const newBook = await Book.create({ title, author, coverImage });
-        res.status(201).json(newBook);
-    } catch (error) {
-        next(error);
+    if (!title || !author) {
+      return next(new Error("Title and author are required"));
     }
+
+    if (!coverImageFile || !pdfFile) {
+      return next(new Error("Both cover image and PDF are required"));
+    }
+    const coverImageUrl = coverImageFile.path;
+    const pdfUrl = pdfFile.path;
+    const existingBook = await Book.findOne({ title, author });
+    if (existingBook) {
+      return next(new Error("Book already exists"));
+    }
+
+    const newBook = await Book.create({
+      title,
+      author,
+      coverImage: coverImageUrl,
+      pdf: pdfUrl,
+    });
+
+    res.status(201).json(newBook);
+  } catch (err) {
+    next(err);
+  }
 };
 
 // @desc    Add a book copy
