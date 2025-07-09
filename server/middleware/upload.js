@@ -23,7 +23,7 @@ const storage = new CloudinaryStorage({
             const folder = file.mimetype.startsWith("application/pdf")
                 ? "books/pdfs"
                 : "books/covers";
-
+                      
             const originalName = file.originalname
                 .split(".")[0]
                 .trim()

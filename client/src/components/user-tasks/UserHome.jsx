@@ -106,6 +106,14 @@ function UserHome() {
                         <h3 className="text-lg font-semibold">{book.title}</h3>
                         <p className="text-sm text-gray-600">{book.author}</p>
                         <p className="text-sm mt-1">Available Copies: {book.availableCopies}</p>
+                        { book.pdf && (
+                                <button
+                                    onClick = {() => window.open(book.pdf, '_blank')}
+                                    className = "px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                                >
+                                    View PDF
+                                </button>
+                        )}
                         <button
                             onClick={() => handleIssue(book._id)}
                             className="hidden group-hover:block absolute bottom-4 right-4 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"

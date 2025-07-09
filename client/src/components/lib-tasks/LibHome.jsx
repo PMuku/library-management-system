@@ -288,6 +288,14 @@ function LibHome() {
                             >
                                 Delete
                             </button>
+                            { book.pdf && (
+                                <button
+                                    onClick = {() => window.open(book.pdf, '_blank')}
+                                    className = "px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                                >
+                                    View PDF
+                                </button>
+                            )}
                         </div>
                     </div>
                 ))}
