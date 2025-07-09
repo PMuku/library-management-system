@@ -1,4 +1,5 @@
 import { useState } from "react";
+import fetchWithAuth from "../utils/fetchWithAuth"; // Ensure this utility exists
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function AdminDashboard({ setIsLoggedIn }) {
@@ -10,7 +11,7 @@ function AdminDashboard({ setIsLoggedIn }) {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch(`${BACKEND_URL}/api/auth/logout`, {
+            const response = await fetchWithAuth(`${BACKEND_URL}/api/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,7 +35,7 @@ function AdminDashboard({ setIsLoggedIn }) {
 
     const handleLibCreate = async () => {
         try {
-            const response = await fetch(`${BACKEND_URL}/api/admin/makelib`, {
+            const response = await fetchWithAuth(`${BACKEND_URL}/api/admin/makelib`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

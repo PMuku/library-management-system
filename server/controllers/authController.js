@@ -35,7 +35,7 @@ const userLogin = async (req, res, next) => {
                 role: user.role,                   // payload
             },             
             process.env.JWT_ACCESS_SECRET,         // secret key
-            { expiresIn: '30m' }                   // token expiry
+            { expiresIn: '10s' }                   // token expiry
         );
         const refresh_token = jwt.sign(
             { 
@@ -142,9 +142,9 @@ const handleRefreshToken = async (req, res, next) => {
                 role: payload.role,                   // payload
             },             
             process.env.JWT_ACCESS_SECRET,         // secret key
-            { expiresIn: '30m' }                   // token expiry
+            { expiresIn: '10s' }                   // token expiry
         );
-        res.status(200).json({ new_access_token });
+        res.status(200).json({ access_token: new_access_token });
     } catch (error) {
         next(error);
     }

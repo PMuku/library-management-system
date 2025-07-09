@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import fetchWithAuth from '../../utils/fetchWithAuth.js'; // Ensure this utility exists
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -13,12 +14,12 @@ function UserHome() {
             const queryParams = new URLSearchParams();
             if (search) queryParams.append('search', search);
             if (author) queryParams.append('author', author);
-            const res = await fetch(`${BACKEND_URL}/api/books?${queryParams.toString()}`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/books?${queryParams.toString()}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                 },
             });
-            if (!res.ok) throw new Error('Failed to fetch books');
+            if (!res.ok) throw new Error('Failed to fetchWithAuth books');
             const data = await res.json();
             setBooks(data);
         } catch (err) {
@@ -38,7 +39,7 @@ function UserHome() {
         }
 
         try {
-            const res = await fetch(`${BACKEND_URL}/api/users/issue`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/users/issue`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

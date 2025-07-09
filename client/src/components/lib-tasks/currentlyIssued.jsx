@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-
+import fetchWithAuth from '../../utils/fetchWithAuth.js'; // Ensure this utility exists
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function LibrarianCurrentIssues() {
@@ -11,13 +11,13 @@ function LibrarianCurrentIssues() {
         try {
             const endpoint = filter === 'overdue' ? 'overdue-users' : 'current-issues';
             
-            const res = await fetch(`${BACKEND_URL}/api/librarian/${endpoint}`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/librarian/${endpoint}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                 },
             });
             if (!res.ok) {
-                const errorMsg = filter === 'overdue' ? 'Failed to fetch overdue books' : 'Failed to fetch current issued books';
+                const errorMsg = filter === 'overdue' ? 'Failed to fetchWithAuth overdue books' : 'Failed to fetchWithAuth current issued books';
                 throw new Error(errorMsg);
             }
             const data = await res.json();
@@ -36,7 +36,7 @@ function LibrarianCurrentIssues() {
         if (!confirm("Confirm that the book has been returned?")) return;
 
         try {
-            const res = await fetch(`${BACKEND_URL}/api/librarian/mark-returned/${id}`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/librarian/mark-returned/${id}`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,

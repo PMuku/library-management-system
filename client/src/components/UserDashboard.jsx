@@ -3,7 +3,7 @@ import UserHome from './user-tasks/UserHome';
 import CurrentIssues from './user-tasks/CurrentIssues';
 import PastRequests from './user-tasks/PastRequests';
 import PayFines from './user-tasks/payFines';
-
+import fetchWithAuth from '../utils/fetchWithAuth'; // Ensure this utility exists
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function UserDashboard({ setIsLoggedIn, setRole }) {
@@ -32,7 +32,7 @@ function UserDashboard({ setIsLoggedIn, setRole }) {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch(`${BACKEND_URL}/api/auth/logout`, {
+            const response = await fetchWithAuth(`${BACKEND_URL}/api/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -29,7 +29,7 @@ function LibrarianDashboard({ setIsLoggedIn, setRole }) {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch(`${BACKEND_URL}/api/auth/logout`, {
+            const response = await fetchWithAuth(`${BACKEND_URL}/api/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

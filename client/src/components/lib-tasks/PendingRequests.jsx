@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-
+import fetchWithAuth from '../../utils/fetchWithAuth.js'; // Ensure this utility exists
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function PendingRequests() {
@@ -10,12 +10,12 @@ function PendingRequests() {
     const fetchRequests = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`${BACKEND_URL}/api/librarian/pending-requests`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/librarian/pending-requests`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                 },
             });
-            if (!res.ok) throw new Error('Failed to fetch pending requests');
+            if (!res.ok) throw new Error('Failed to fetchWithAuth pending requests');
             const data = await res.json();
             setRequests(data);
         } catch (err) {
@@ -31,7 +31,7 @@ function PendingRequests() {
 
     const handleApprove = async (id) => {
         try {
-            const res = await fetch(`${BACKEND_URL}/api/librarian/approve-request/${id}`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/librarian/approve-request/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ function PendingRequests() {
         const reason = prompt('Enter reason for rejection:');
         if (!reason) return;
         try {
-            const res = await fetch(`${BACKEND_URL}/api/librarian/reject-request/${id}`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/librarian/reject-request/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

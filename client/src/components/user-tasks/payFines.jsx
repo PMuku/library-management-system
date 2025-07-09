@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import fetchWithAuth from '../../utils/fetchWithAuth.js'; // Ensure this utility exists
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -10,12 +11,12 @@ function PayFines() {
 
     const fetchFine = async () => {
         try {
-            const res = await fetch(`${BACKEND_URL}/api/users/fines`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/users/fines`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                 },
             });
-            if (!res.ok) throw new Error('Failed to fetch fine');
+            if (!res.ok) throw new Error('Failed to fetchWithAuth fine');
             const data = await res.json();
             setTotalFine(data.totalFine);
             setTotalBooks(data.totalBooks);
@@ -30,7 +31,7 @@ function PayFines() {
 
     const handlePay = async () => {
         try {
-            const res = await fetch(`${BACKEND_URL}/api/users/pay-fine`, {
+            const res = await fetchWithAuth(`${BACKEND_URL}/api/users/pay-fine`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`,

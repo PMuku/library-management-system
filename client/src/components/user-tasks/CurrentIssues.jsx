@@ -1,5 +1,6 @@
 // CurrentIssues.jsx
 import { useEffect, useState } from 'react';
+import fetchWithAuth from '../../utils/fetchWithAuth.js'; // Ensure this utility exists
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -10,12 +11,12 @@ function CurrentIssues() {
     useEffect(() => {
         const fetchIssuedBooks = async () => {
             try {
-                const res = await fetch(`${BACKEND_URL}/api/users/view-issued-current`, {
+                const res = await fetchWithAuth(`${BACKEND_URL}/api/users/view-issued-current`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                     },
                 });
-                if (!res.ok) throw new Error('Failed to fetch issued books');
+                if (!res.ok) throw new Error('Failed to fetchWithAuth issued books');
                 const data = await res.json();
                 setBooks(data);
             } catch (err) {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import fetchWithAuth from '../utils/fetchWithAuth'; // Ensure this utility exists
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -14,7 +15,7 @@ function LoginComponent({ setIsLoggedIn, setRole }) {
         setError('');
         setMessage('');
         try {
-            const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+            const response = await fetchWithAuth(`${BACKEND_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
@@ -46,7 +47,7 @@ function LoginComponent({ setIsLoggedIn, setRole }) {
         setError('');
         setMessage('');
         try {
-            const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
+            const response = await fetchWithAuth(`${BACKEND_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

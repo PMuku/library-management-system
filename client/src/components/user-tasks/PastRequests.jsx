@@ -1,6 +1,7 @@
 // PastRequests.jsx
 import { useEffect, useState } from 'react';
 import { getStatusStyle, getFineStyle } from '../../utils/Styles';
+import fetchWithAuth from '../../utils/fetchWithAuth.js'; // Ensure this utility exists
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -11,12 +12,12 @@ function PastRequests() {
     useEffect(() => {
         const fetchPastRequests = async () => {
             try {
-                const res = await fetch(`${BACKEND_URL}/api/users/view-issued-past`, {
+                const res = await fetchWithAuth(`${BACKEND_URL}/api/users/view-issued-past`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                     },
                 });
-                if (!res.ok) throw new Error('Failed to fetch past requests');
+                if (!res.ok) throw new Error('Failed to fetchWithAuth past requests');
                 const data = await res.json();
                 setRequests(data);
             } catch (err) {
