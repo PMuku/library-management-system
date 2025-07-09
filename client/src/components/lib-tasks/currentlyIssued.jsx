@@ -64,13 +64,14 @@ function LibrarianCurrentIssues() {
 
         if (daysLate > 0) {
             return (
-                <>
-                    {req.finePaid ? <p className="text-green-600 font-semibold">Fine Paid</p>
-                    : <p className="text-red-600 font-semibold">Overdue</p>}
+                <div className="mt-3 space-y-1">
+                    <p className={req.finePaid ? "text-green-600 dark:text-green-400 font-semibold" : "text-red-600 dark:text-red-400 font-semibold"}>
+                        {req.finePaid ? "Fine Paid" : "Overdue"}
+                    </p>
                     <p><strong>Expected Return:</strong> {dueDate.toLocaleDateString()}</p>
                     <p><strong>Days Late:</strong> {daysLate}</p>
                     <p><strong>Total Fine:</strong> ₹{fine}</p>
-                </>
+                </div>
             );
         }
 
@@ -79,30 +80,41 @@ function LibrarianCurrentIssues() {
 
     return (
         <div>
-            <h2 className="text-2xl font-semibold mb-4">Currently Issued Books</h2>
-            {error && <p className="text-red-600">{error}</p>}
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+                Currently Issued Books
+            </h2>
 
-            {/* Filter Options */}
+            {error && (
+                <div className="relative flex items-start gap-2 rounded-md bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-4 py-3 text-sm animate-fade-in shadow-sm mb-4">
+                    <span className="material-icons text-base">error_outline</span>
+                    <div className="flex-1">{error}</div>
+                    <button
+                        onClick={() => setError('')}
+                        className="absolute top-1 right-2 text-red-600 dark:text-red-300 hover:text-red-800"
+                    >
+                        <span className="material-icons text-sm">close</span>
+                    </button>
+                </div>
+            )}
+
             <div className="mb-6">
-                <label className="mr-2 font-medium">Filter:</label>
+                <label className="mr-2 font-medium text-gray-700 dark:text-gray-300">Filter:</label>
                 <select
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
-                    className="border border-gray-300 p-2 rounded"
+                    className="p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
                 >
                     <option value="all">All</option>
                     <option value="overdue">Overdue</option>
                 </select>
             </div>
 
-            {/* Issue Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {issues.map((req) => (
                     <div
                         key={req._id}
-                        className="border border-gray-300 rounded-xl p-4 shadow bg-white"
+                        className="border border-gray-300 dark:border-gray-700 rounded-xl p-4 shadow bg-white dark:bg-gray-900 text-gray-800 dark:text-white"
                     >
-                        
                         <p><strong>Book:</strong> {req.bookId.title}</p>
                         <p><strong>Author:</strong> {req.bookId.author}</p>
                         <p><strong>Issued By:</strong> {req.user.username}</p>
@@ -110,11 +122,12 @@ function LibrarianCurrentIssues() {
                         <p><strong>Issued On:</strong> {new Date(req.issueDate).toLocaleDateString()}</p>
                         <p><strong>Duration:</strong> {req.duration} days</p>
                         <p><strong>Copy ID:</strong> {req.bookcpyId}</p>
-                        
+
                         {renderOverdueInfo(req)}
+
                         <button
                             onClick={() => handleMarkReturned(req._id)}
-                            className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                            className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
                         >
                             Mark Returned
                         </button>
@@ -123,6 +136,7 @@ function LibrarianCurrentIssues() {
             </div>
         </div>
     );
+
 }
 
 export default LibrarianCurrentIssues;

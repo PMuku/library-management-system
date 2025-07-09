@@ -31,7 +31,19 @@ function PastRequests() {
     return (
         <div>
             <h2 className="text-2xl font-semibold mb-4">Past Requests</h2>
-            {error && <p className="text-red-600">{error}</p>}
+            {error && (
+                <div className="relative flex items-start gap-2 rounded-md bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-4 py-3 text-sm animate-fade-in shadow-sm">
+                    <span className="material-icons text-base">error_outline</span>
+                    <div className="flex-1">{error}</div>
+                    <button
+                        onClick={() => setError('')}
+                        className="absolute top-1 right-2 text-red-600 dark:text-red-300 hover:text-red-800"
+                        aria-label="Close error"
+                    >
+                        <span className="material-icons text-sm">close</span>
+                    </button>
+                </div>
+            )}
             <div className="space-y-4">
                 {requests.map((req) => (
                     <div key={req._id} className="p-4 border rounded shadow">

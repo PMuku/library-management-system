@@ -67,17 +67,25 @@ function PendingRequests() {
 
     return (
         <div>
-            <h2 className="text-2xl font-semibold mb-4">Pending Issue Requests</h2>
-            {loading && <p>Loading...</p>}
-            {error && <p className="text-red-600">{error}</p>}
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+                Pending Issue Requests
+            </h2>
+
+            {loading && <p className="text-gray-700 dark:text-gray-300">Loading...</p>}
+            {error && (
+                <div className="text-red-600 dark:text-red-400 mb-4">
+                    {error}
+                </div>
+            )}
+
             <div className="space-y-4">
                 {requests.length === 0 ? (
-                    <p>No pending requests</p>
+                    <p className="text-gray-600 dark:text-gray-400">No pending requests</p>
                 ) : (
                     requests.map((req) => (
                         <div
                             key={req._id}
-                            className="border p-4 rounded-lg shadow bg-white flex flex-col gap-2"
+                            className="border border-gray-300 dark:border-gray-700 p-4 rounded-xl shadow bg-white dark:bg-gray-900 text-gray-800 dark:text-white flex flex-col gap-2"
                         >
                             <h3 className="text-lg font-bold">{req.bookId?.title || "Unknown Book"}</h3>
                             <p>Author: {req.bookId?.author || "Unknown"}</p>
@@ -85,16 +93,17 @@ function PendingRequests() {
                             <p>User ID: {req.user?._id || "N/A"}</p>
                             <p>Duration: {req.duration} days</p>
                             <p>Requested On: {new Date(req.issueDate).toLocaleDateString()}</p>
+
                             <div className="mt-2 flex gap-2">
                                 <button
                                     onClick={() => handleApprove(req._id)}
-                                    className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
+                                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded transition"
                                 >
                                     Approve
                                 </button>
                                 <button
                                     onClick={() => handleReject(req._id)}
-                                    className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700"
+                                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded transition"
                                 >
                                     Reject
                                 </button>

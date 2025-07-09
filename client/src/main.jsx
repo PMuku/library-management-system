@@ -7,6 +7,9 @@ document.title = "My React App";
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <App />
+        <div className="bg-background text-foreground min-h-screen transition-colors duration-300">
+            <App />
+        </div>
+        
     </StrictMode>,
 )

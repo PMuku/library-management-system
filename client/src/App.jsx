@@ -5,6 +5,7 @@ import UserDashboard from "./components/UserDashboard";
 import LibrarianDashboard from "./components/LibrarianDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import fetchWithAuth from "./utils/fetchWithAuth"; // <- Ensure this exists
+import ThemeToggle from "./components/ThemeToggle";
 
 export default function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(null); // null = loading
@@ -45,6 +46,7 @@ export default function App() {
 
     return (
         <>
+            <ThemeToggle />
             {isLoggedIn ? (
                 dashboards[role] || <p>Invalid role</p>
             ) : (

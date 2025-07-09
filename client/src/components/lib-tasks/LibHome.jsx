@@ -133,19 +133,31 @@ function LibHome() {
 
     return (
         <div>
-            <h2 className="text-2xl font-semibold mb-4">Manage Books</h2>
-            {error && <p className="text-red-600">{error}</p>}
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Manage Books</h2>
+
+            {error && (
+                <div className="relative flex items-start gap-2 rounded-md bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-4 py-3 text-sm animate-fade-in shadow-sm mb-4">
+                    <span className="material-icons text-base">error_outline</span>
+                    <div className="flex-1">{error}</div>
+                    <button
+                        onClick={() => setError('')}
+                        className="absolute top-1 right-2 text-red-600 dark:text-red-300 hover:text-red-800"
+                        aria-label="Close error"
+                    >
+                        <span className="material-icons text-sm">close</span>
+                    </button>
+                </div>
+            )}
 
             <div className="mb-4">
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    className="px-4 py-2 rounded-md bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition"
                 >
                     + Add New Book
                 </button>
             </div>
 
-            {/* Initial Book Form */}
             {showForm && !showUploadDialog && (
                 <form
                     onSubmit={handleInitialSubmit}
@@ -156,7 +168,7 @@ function LibHome() {
                         placeholder="Title"
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
-                        className="p-2 border border-gray-300 rounded w-full md:w-1/3"
+                        className="p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full md:w-1/3"
                         required
                     />
                     <input
@@ -164,12 +176,12 @@ function LibHome() {
                         placeholder="Author"
                         value={newAuthor}
                         onChange={(e) => setNewAuthor(e.target.value)}
-                        className="p-2 border border-gray-300 rounded w-full md:w-1/3"
+                        className="p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full md:w-1/3"
                         required
                     />
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                        className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition"
                     >
                         Next
                     </button>
@@ -179,53 +191,57 @@ function LibHome() {
             {showUploadDialog && (
                 <form
                     onSubmit={handleFinalSubmit}
-                    className="mb-6 flex flex-col gap-4 p-4 border rounded bg-gray-50 max-w-xl"
+                    className="mb-6 flex flex-col gap-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700 max-w-xl"
                 >
-                    <p className="text-lg font-semibold">Step 2: Upload Files</p>
-                    <p className="text-sm text-gray-600 mb-2">
-                        Upload a <strong>cover image</strong> (required) and a <strong>PDF of the book</strong> (required).
+                    <p className="text-lg font-semibold text-gray-800 dark:text-white">Step 2: Upload Files</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        Upload a <strong>cover image</strong> and a <strong>PDF of the book</strong> (both required).
                     </p>
 
                     <div className="flex flex-col">
-                        <label className="mb-1 font-medium text-gray-700">Cover Image (required)</label>
+                        <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">
+                            Cover Image (required)
+                        </label>
                         <input
                             type="file"
                             accept="image/*"
                             onChange={(e) => setSelectedFile(e.target.files[0])}
-                            className="p-2 border border-gray-300 rounded"
+                            className="p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                         />
                         {selectedFile && (
                             <span className="text-sm text-green-600 mt-1">Selected: {selectedFile.name}</span>
                         )}
-                        <span className="text-xs text-gray-500 mt-1">Accepted formats: JPG, PNG</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Accepted formats: JPG, PNG</span>
                     </div>
 
                     <div className="flex flex-col">
-                        <label className="mb-1 font-medium text-gray-700">PDF of the Book (Required)</label>
+                        <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">
+                            PDF of the Book (required)
+                        </label>
                         <input
                             type="file"
                             accept="application/pdf"
                             onChange={(e) => setSelectedPDF(e.target.files[0])}
-                            className="p-2 border border-gray-300 rounded"
+                            className="p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                             required
                         />
                         {selectedPDF && (
                             <span className="text-sm text-green-600 mt-1">Selected: {selectedPDF.name}</span>
                         )}
-                        <span className="text-xs text-gray-500 mt-1">Only PDF format allowed</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Only PDF format allowed</span>
                     </div>
 
                     <div className="mt-4 flex gap-3">
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
                         >
                             Submit Book
                         </button>
                         <button
                             type="button"
                             onClick={() => setShowUploadDialog(false)}
-                            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                            className="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md hover:bg-gray-400 dark:hover:bg-gray-600 transition"
                         >
                             Back
                         </button>
@@ -233,65 +249,65 @@ function LibHome() {
                 </form>
             )}
 
-            {/* Filters */}
-            <form onSubmit={handleFilterSubmit} className="mb-6 flex flex-col md:flex-row gap-4">
+            <form onSubmit={handleFilterSubmit} className="mb-8 flex flex-col md:flex-row gap-4">
                 <input
                     type="text"
                     placeholder="Search by title"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="p-2 border border-gray-300 rounded w-full md:w-1/2"
+                    className="p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full md:w-1/2"
                 />
                 <input
                     type="text"
                     placeholder="Filter by author"
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
-                    className="p-2 border border-gray-300 rounded w-full md:w-1/2"
+                    className="p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full md:w-1/2"
                 />
                 <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-md font-medium shadow transition"
                 >
                     Apply Filters
                 </button>
             </form>
 
-            {/* Book Display */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {books.map((book) => (
                     <div
                         key={book._id}
-                        className="relative group border border-gray-300 rounded-xl p-4 shadow hover:shadow-lg transition bg-white"
+                        className="relative group border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-white rounded-xl p-4 shadow-md hover:shadow-lg transition"
                     >
                         {book.coverImage && (
                             <img
                                 src={book.coverImage}
                                 alt={book.title}
-                                className="w-full h-48 object-contain mb-3 rounded"
+                                className="w-full h-48 object-contain mb-3 rounded-md"
                             />
                         )}
-                        <h3 className="text-lg font-semibold">{book.title}</h3>
-                        <p className="text-sm text-gray-600">{book.author}</p>
-                        <p className="text-sm mt-1">Available Copies: {book.availableCopies}</p>
+                        <h3 className="text-lg font-semibold mb-1">{book.title}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{book.author}</p>
+                        <p className="text-sm mt-1 text-gray-700 dark:text-gray-300">
+                            Available Copies: {book.availableCopies}
+                        </p>
 
-                        <div className="mt-4 flex gap-2">
+                        <div className="mt-4 flex gap-2 flex-wrap">
                             <button
                                 onClick={() => handleAddCopy(book._id)}
-                                className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                                className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md transition"
                             >
                                 + Add Copy
                             </button>
                             <button
                                 onClick={() => handleDelete(book._id)}
-                                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                                className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-md transition"
                             >
                                 Delete
                             </button>
-                            { book.pdf && (
+                            {book.pdf && (
                                 <button
-                                    onClick = {() => window.open(book.pdf, '_blank')}
-                                    className = "px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                                    onClick={() => window.open(book.pdf, '_blank')}
+                                    className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-md transition"
                                 >
                                     View PDF
                                 </button>
@@ -302,6 +318,7 @@ function LibHome() {
             </div>
         </div>
     );
+
 }
 
 export default LibHome;
